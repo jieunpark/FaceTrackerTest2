@@ -1,4 +1,4 @@
-package com.example.jepark.facetrackertest2;
+package com.example.jepark.facetrackertest2.camera;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

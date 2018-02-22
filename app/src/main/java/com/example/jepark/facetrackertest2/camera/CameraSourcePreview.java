@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.jepark.facetrackertest2;
+package com.example.jepark.facetrackertest2.camera;
 
 import android.content.Context;
 import android.content.res.Configuration;
@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.TextureView;
 import android.view.ViewGroup;
 
+import com.example.jepark.facetrackertest2.overlay.GraphicOverlay;
 import com.example.jepark.facetrackertest2.utils.Utils;
 import com.google.android.gms.common.images.Size;
 

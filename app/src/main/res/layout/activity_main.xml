@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.jepark.facetrackertest2.MainActivity">
 
-   <com.example.jepark.facetrackertest2.CameraSourcePreview
+   <com.example.jepark.facetrackertest2.camera.CameraSourcePreview
        android:id="@+id/preview"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
@@ -14,6 +14,6 @@
            android:id="@+id/faceOverlay"
            android:layout_width="match_parent"
            android:layout_height="match_parent" />
-   </com.example.jepark.facetrackertest2.CameraSourcePreview>
+   </com.example.jepark.facetrackertest2.camera.CameraSourcePreview>
 
 </LinearLayout>

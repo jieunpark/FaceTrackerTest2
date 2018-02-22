@@ -1,4 +1,4 @@
-package com.example.jepark.facetrackertest2;
+package com.example.jepark.facetrackertest2.camera;
 
 import android.content.Context;
 import android.os.Build;
