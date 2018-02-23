@@ -4,16 +4,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.jepark.facetrackertest2.MainActivity">
 
    <com.example.jepark.facetrackertest2.camera.CameraSourcePreview
        android:id="@+id/preview"
        android:layout_width="match_parent"
-       android:layout_height="match_parent">
+       android:layout_height="match_parent"
+       android:layout_weight="1">
        <com.example.jepark.facetrackertest2.overlay.GraphicOverlay
            android:id="@+id/faceOverlay"
            android:layout_width="match_parent"
            android:layout_height="match_parent" />
    </com.example.jepark.facetrackertest2.camera.CameraSourcePreview>
 
+    <ImageView
+        android:id="@+id/imgPreview"
+        android:layout_weight="0"
+        android:background="#ff0000"
+        android:padding="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnOK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="OK"/>
 </LinearLayout>

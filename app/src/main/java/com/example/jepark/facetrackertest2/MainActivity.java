@@ -6,6 +6,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -13,6 +14,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.jepark.facetrackertest2.camera.CameraSourcePreview;
 import com.example.jepark.facetrackertest2.camera.tracker.GraphicFaceTrackerFactory;
@@ -25,6 +28,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private CameraSourcePreview mPreview;
     private GraphicOverlay mGraphicOverlay;
 
+    private ImageView imgPreview;
+    private Button btnOK;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
         if (checkGooglePlayAvailability()) {
             requestPermissions();
         }
-
-
     }
 
     @Override
@@ -171,6 +176,9 @@ public class MainActivity extends AppCompatActivity {
     private void initLayout() {
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay) findViewById(R.id.faceOverlay);
+        btnOK = (Button) findViewById(R.id.btnOK);
+        btnOK.setOnClickListener(mOnClickListener);
+        imgPreview = (ImageView) findViewById(R.id.imgPreview);
     }
 
     /**
@@ -225,5 +233,40 @@ public class MainActivity extends AppCompatActivity {
                 mCamera2Source = null;
             }
         }
+    }
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if (view.getId() == R.id.btnOK) {
+                startGif();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        endGif();
+                    }
+                },3000);
+            }
+        }
+    };
+
+    /**
+     * Gif 생성 시작
+     */
+    private void startGif() {
+        mCamera2Source.setPreviewCallBack(new Camera2Source.PreviewFrameCallback() {
+            @Override
+            public void onPreviewFrame(ByteBuffer byteBuffer, int width, int height) {
+                Log.d(TAG, ">>> onPreviewFrame ");
+            }
+        });
+    }
+
+    /**
+     * Gif 완료
+     */
+    private void endGif() {
+        mCamera2Source.setPreviewCallBack(null);
     }
 }

@@ -215,6 +215,10 @@ public class Camera2Source {
 
     private AutoFocusCallback mAutoFocusCallback;
 
+    private PreviewFrameCallback mPreviewFrameCallBack;
+
+
+
     private Rect sensorArraySize;
     private boolean isMeteringAreaAFSupported = false;
     private boolean swappedDimensions = false;
@@ -635,7 +639,7 @@ public class Camera2Source {
      * @param displayOrientation the display orientation for a non stretched preview
      * @throws IOException if the supplied texture view could not be used as the preview display
      */
-    @RequiresPermission(Manifest.permission.CAMERA)
+//    @RequiresPermission(Manifest.permission.CAMERA)
     public Camera2Source start(@NonNull AutoFitTextureView textureView, int displayOrientation) throws IOException {
         mDisplayOrientation = displayOrientation;
         if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -1261,6 +1265,14 @@ public class Camera2Source {
         }
     }
 
+    public interface PreviewFrameCallback {
+        void onPreviewFrame(ByteBuffer byteBuffer, int width, int height);
+    }
+
+    public void setPreviewCallBack(PreviewFrameCallback callBack) {
+        mPreviewFrameCallBack = callBack;
+    }
+
     /**
      * This runnable controls access to the underlying receiver, calling it to process frames when
      * available from the camera.  This is designed to run detection on frames as fast as possible
@@ -1368,12 +1380,17 @@ public class Camera2Source {
                         return;
                     }
 
+                    ByteBuffer byteBuffer = ByteBuffer.wrap(quarterNV21(mPendingFrameData, mPreviewSize.getWidth(), mPreviewSize.getHeight()));
                     outputFrame = new Frame.Builder()
-                            .setImageData(ByteBuffer.wrap(quarterNV21(mPendingFrameData, mPreviewSize.getWidth(), mPreviewSize.getHeight())), mPreviewSize.getWidth() / 4, mPreviewSize.getHeight() / 4, ImageFormat.NV21)
+                            .setImageData(byteBuffer, mPreviewSize.getWidth() / 4, mPreviewSize.getHeight() / 4, ImageFormat.NV21)
                             .setId(mPendingFrameId)
                             .setTimestampMillis(mPendingTimeMillis)
                             .setRotation(getDetectorOrientation(mSensorOrientation))
                             .build();
+
+                    if (mPreviewFrameCallBack != null) {
+                        mPreviewFrameCallBack.onPreviewFrame(byteBuffer, mPreviewSize.getWidth(), mPreviewSize.getHeight());
+                    }
 
                     // We need to clear mPendingFrameData to ensure that this buffer isn't
                     // recycled back to the camera before we are done using that data.
