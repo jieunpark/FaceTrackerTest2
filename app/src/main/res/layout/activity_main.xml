@@ -10,7 +10,7 @@
        android:id="@+id/preview"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
-       <com.example.jepark.facetrackertest2.GraphicOverlay
+       <com.example.jepark.facetrackertest2.overlay.GraphicOverlay
            android:id="@+id/faceOverlay"
            android:layout_width="match_parent"
            android:layout_height="match_parent" />
