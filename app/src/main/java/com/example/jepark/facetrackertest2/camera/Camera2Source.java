@@ -1266,7 +1266,7 @@ public class Camera2Source {
     }
 
     public interface PreviewFrameCallback {
-        void onPreviewFrame(ByteBuffer byteBuffer, int width, int height);
+        void onPreviewFrame(byte[] byteBuffer, int width, int height);
     }
 
     public void setPreviewCallBack(PreviewFrameCallback callBack) {
@@ -1389,7 +1389,7 @@ public class Camera2Source {
                             .build();
 
                     if (mPreviewFrameCallBack != null) {
-                        mPreviewFrameCallBack.onPreviewFrame(byteBuffer, mPreviewSize.getWidth(), mPreviewSize.getHeight());
+                        mPreviewFrameCallBack.onPreviewFrame(mPendingFrameData, mPreviewSize.getWidth(), mPreviewSize.getHeight());
                     }
 
                     // We need to clear mPendingFrameData to ensure that this buffer isn't

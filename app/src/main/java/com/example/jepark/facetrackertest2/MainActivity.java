@@ -6,6 +6,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -27,6 +32,7 @@ import com.example.jepark.facetrackertest2.camera.Camera2Source;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -257,8 +263,20 @@ public class MainActivity extends AppCompatActivity {
     private void startGif() {
         mCamera2Source.setPreviewCallBack(new Camera2Source.PreviewFrameCallback() {
             @Override
-            public void onPreviewFrame(ByteBuffer byteBuffer, int width, int height) {
+            public void onPreviewFrame(byte[] byteBuffer, int width, int height) {
                 Log.d(TAG, ">>> onPreviewFrame ");
+                byte[] data = NV21toJPEG(byteBuffer, width, height, 100);
+
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+
+                final Bitmap finalBitmap = bitmap;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        imgPreview.setImageBitmap(finalBitmap);
+                    }
+                });
             }
         });
     }
@@ -268,5 +286,20 @@ public class MainActivity extends AppCompatActivity {
      */
     private void endGif() {
         mCamera2Source.setPreviewCallBack(null);
+    }
+
+    /**
+     * nv21 을 JPEG 데이터로 변환
+     * @param nv21
+     * @param width
+     * @param height
+     * @param quality
+     * @return
+     */
+    public byte[] NV21toJPEG(byte[] nv21, int width, int height, int quality) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        YuvImage yuv = new YuvImage(nv21, ImageFormat.NV21, width, height, null);
+        yuv.compressToJpeg(new Rect(0, 0, width, height), quality, out);
+        return out.toByteArray();
     }
 }
